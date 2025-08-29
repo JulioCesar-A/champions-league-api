@@ -1,0 +1,24 @@
+{
+  "name": "expressapi-champions-league",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "tsx --env-file-if-exists=.env src/server.ts",
+    "watch": "tsx watch --env-file-if-exists=.env src/server.ts",
+    "dist": "tsup src",
+    "exec:dist": "npm run dist && node --env-file-if-exists=.env dist/server.js"
+  },
+  "keywords": ["express", "api", "champions", "league"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
