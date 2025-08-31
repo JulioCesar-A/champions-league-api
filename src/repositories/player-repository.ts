@@ -93,7 +93,6 @@ export const insertPlayer = async(player : Player, clubId?: number) : Promise<Pl
     }
 
     await fixPlayerIds();
-    // Recarrega os dados corrigidos para retornar o último
     const updatedPlayers = await getAllPlayers();
     return updatedPlayers[updatedPlayers.length-1];
 }
@@ -127,7 +126,6 @@ export const updatePlayer = async(
     }
 
     await fixPlayerIds();
-    // Recarrega os dados corrigidos para retornar o jogador atualizado
     const updatedPlayers = await getAllPlayers();
     return updatedPlayers.find(p => p.name === updatedPlayer.name)!;
 }
