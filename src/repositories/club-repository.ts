@@ -25,3 +25,11 @@ export const getClubById = async (id : number) : Promise<ClubResponse | undefine
 
     return foundClub;
 }
+
+export const getClubByName = async (name : string) : Promise<ClubResponse | undefined> => {
+    let clubsData: ClubResponse[] = await getAllClubs();
+
+    const foundClub : ClubResponse | undefined = clubsData.find((club) => club.name.includes(name));
+
+    return foundClub;
+}
