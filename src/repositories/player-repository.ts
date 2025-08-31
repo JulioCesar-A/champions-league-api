@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { Player, PlayerResponse, Statistics } from '../models/player/player-models';
+import { Player, PlayerResponse, PlayerUpdate, Statistics } from '../models/player/player-models';
 
 const playersFilePath: string = path.join(__dirname, '../../data/players.json');
 
@@ -45,6 +45,10 @@ export const getPlayerByName = async(name: string) : Promise<PlayerResponse | un
     
     const foundPlayer: PlayerResponse | undefined = playersData.find((player) => player.name.includes(name));
     
+    if (!foundPlayer){
+        throw new Error("Player not found");
+    }
+
     return foundPlayer;
 }
 
@@ -76,4 +80,35 @@ export const insertPlayer = async(player : Player, clubId?: number) : Promise<Pl
     }
 
     return playersData[playersData.length-1];
+}
+
+export const updatePlayer = async(
+    player: PlayerUpdate,
+    id: number
+) : Promise<PlayerResponse> => {
+    let playersData: PlayerResponse[] = await getAllPlayers();
+
+    const playerIndex = playersData.findIndex((p) => p.id === id);
+    if (playerIndex === -1) {
+        throw new Error('Player not found');
+    }
+
+    const updatedPlayer = playersData[playerIndex] = {
+        ...playersData[playerIndex],
+        ...player,
+        id: id,
+        statistics: {
+            ...playersData[playerIndex].statistics,
+            ...player.statistics
+        }
+    };
+
+    try {
+        await fs.writeFile(playersFilePath, JSON.stringify(playersData, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Failed to write player data to file', error);
+        throw new Error('Could not update player to database');
+    }
+
+    return updatedPlayer;
 }
