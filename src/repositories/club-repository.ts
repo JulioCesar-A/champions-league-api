@@ -5,7 +5,7 @@ import { ClubResponse } from '../models/club/club-models';
 
 const clubsFilePath = path.join(__dirname, '../../data/clubs.json');
 
-async function getAllClubs() : Promise<ClubResponse[]> {
+export const getAllClubs = async() : Promise<ClubResponse[]> => {
     let clubsData: ClubResponse[] = [];
     try {
         if (fs.existsSync(clubsFilePath)) {
@@ -18,7 +18,7 @@ async function getAllClubs() : Promise<ClubResponse[]> {
     return clubsData;
 }
 
-async function getClubById(id : number) : Promise<ClubResponse | undefined> {
+export const getClubById = async (id : number) : Promise<ClubResponse | undefined> => {
     let clubsData: ClubResponse[] = await getAllClubs();
 
     const foundClub : ClubResponse | undefined = clubsData.find((club) => club.id === id);
