@@ -19,14 +19,10 @@ export const getAllPlayers = async() : Promise<PlayerResponse[]> => {
     let playersData : PlayerResponse[] = [];
 
     try {
-        try {
-            const fileContent = await fs.readFile(playersFilePath, 'utf-8');
-            playersData = JSON.parse(fileContent);
-        } catch (err) {
-            // File might not exist, ignore error
-        }
+        const fileContent = await fs.readFile(playersFilePath, 'utf-8');
+        playersData = JSON.parse(fileContent);
     } catch (error) {
-        console.error('Error reading clubs data:', error);
+        console.error('Error reading players data:', error);
     }
 
     return playersData;
