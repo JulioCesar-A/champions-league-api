@@ -29,7 +29,6 @@ export const deletePlayerByIdService = async(id: number) : Promise<PlayerTransfe
     return playerResponse;
 }
 
-
 export const insertPlayerService = async(player: Player, clubId?: number) : Promise<PlayerTransferModel> => {
     let playerResponse: PlayerTransferModel = {
         statusCode: 0,
@@ -95,5 +94,95 @@ export const updatedPlayerService = async(
     };
     
     console.log(playerResponse);
+    return playerResponse;
+}
+
+export const getAllPlayersService = async() : Promise<PlayerTransferModel> => {
+    let playerResponse: PlayerTransferModel = {
+        statusCode: 0,
+        body: []
+    }
+
+    let players: PlayerResponse[];
+
+    try {
+        players = await getAllPlayers();
+    } catch (error) {
+        const errorMsg = error ? String(error) : '';
+        playerResponse = {
+            statusCode: StatusCode.InternalServerError,
+            body: errorMsg
+        }
+        return playerResponse;
+    }
+
+    playerResponse = {
+        statusCode: StatusCode.OK,
+        body: players
+    }
+
+    return playerResponse;
+}
+
+export const getPlayerByIdService = async(id: number) : Promise<PlayerTransferModel> => {
+    let playerResponse: PlayerTransferModel = {
+        statusCode: 0,
+        body: []
+    }
+
+    let player: PlayerResponse;
+
+    try {
+        player = await getPlayerById(id);
+    } catch (error) {
+        const errorMsg = error ? String(error) : '';
+
+        if (errorMsg.includes('not found')){
+        playerResponse = {
+            statusCode: StatusCode.NotFound,
+            body: errorMsg
+        }
+        } else {
+            playerResponse = {
+                statusCode: StatusCode.InternalServerError,
+                body: errorMsg
+            }
+        }
+
+        return playerResponse;
+    }
+
+    playerResponse = {
+        statusCode: StatusCode.OK,
+        body: player
+    }
+
+    return playerResponse;
+}
+
+export const getPlayerByNameService = async(name: string) : Promise<PlayerTransferModel> => {
+    let playerResponse: PlayerTransferModel = {
+        statusCode: 0,
+        body: []
+    }
+
+    let player: PlayerResponse;
+
+    try {
+        player = await getPlayerByName(name);
+    } catch (error) {
+        const errorMsg = error ? String(error) : '';
+        playerResponse = {
+            statusCode: StatusCode.InternalServerError,
+            body: errorMsg
+        }
+        return playerResponse;
+    }
+
+    playerResponse = {
+        statusCode: StatusCode.OK,
+        body: player
+    }
+
     return playerResponse;
 }
