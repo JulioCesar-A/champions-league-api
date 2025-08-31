@@ -105,3 +105,23 @@ export const updateClub = async(club: ClubUpdate, id: number) : Promise<ClubResp
     console.table(updatedClubs);
     return updatedClubs[updatedClubs.length-1];
 }
+
+export const deleteClubById = async(id: number) : Promise<void> => {
+    let clubsData: ClubResponse[] = await getAllClubs();
+
+    const clubIndex = clubsData.findIndex((p) => p.id === id);
+    if (clubIndex === -1) {
+        throw new Error('club not found');
+    }
+
+    clubsData.splice(clubIndex, 1);
+
+    try {
+        await fs.writeFile(clubsFilePath, JSON.stringify(clubsData, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Failed to write club data to file', error);
+        throw new Error('Could not delete club from database');
+    }
+
+    await fixClubIds();
+}
