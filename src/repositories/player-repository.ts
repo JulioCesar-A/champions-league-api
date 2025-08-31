@@ -15,6 +15,21 @@ const estimateOverallStat = async(stats : Statistics) : Promise<number> => {
     return parseFloat(overall.toFixed(1));
 }
 
+const fixPlayerIds = async (): Promise<void> => {
+    let playersData: PlayerResponse[] = await getAllPlayers();
+    playersData.sort((a, b) => a.id - b.id);
+    playersData = playersData.map((player, index) => ({
+        ...player,
+        id: index + 1
+    }));
+    try {
+        await fs.writeFile(playersFilePath, JSON.stringify(playersData, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Failed to fix player ids', error);
+        throw new Error('Could not fix player ids');
+    }
+}
+
 export const getAllPlayers = async() : Promise<PlayerResponse[]> => {
     let playersData : PlayerResponse[] = [];
 
@@ -56,9 +71,11 @@ export const insertPlayer = async(player : Player, clubId?: number) : Promise<Pl
         throw new Error('Player already exists');
     }
     
+    const maxId = playersData.reduce((max, player) => player.id > max ? player.id : max, 0);
+
     const newPlayer: PlayerResponse ={
         ...player,
-        id: playersData.length + 1,
+        id: maxId + 1,
         clubId: clubId ?? player.clubId ?? undefined
     }
     
@@ -75,7 +92,10 @@ export const insertPlayer = async(player : Player, clubId?: number) : Promise<Pl
         throw new Error('Could not save player to database');
     }
 
-    return playersData[playersData.length-1];
+    await fixPlayerIds();
+    // Recarrega os dados corrigidos para retornar o último
+    const updatedPlayers = await getAllPlayers();
+    return updatedPlayers[updatedPlayers.length-1];
 }
 
 export const updatePlayer = async(
@@ -106,7 +126,10 @@ export const updatePlayer = async(
         throw new Error('Could not update player to database');
     }
 
-    return updatedPlayer;
+    await fixPlayerIds();
+    // Recarrega os dados corrigidos para retornar o jogador atualizado
+    const updatedPlayers = await getAllPlayers();
+    return updatedPlayers.find(p => p.name === updatedPlayer.name)!;
 }
 
 export const deletePlayerById = async(id: number) : Promise<void> => {
@@ -125,5 +148,7 @@ export const deletePlayerById = async(id: number) : Promise<void> => {
         console.error('Failed to write player data to file', error);
         throw new Error('Could not delete player from database');
     }
+
+    await fixPlayerIds();
 
 }
