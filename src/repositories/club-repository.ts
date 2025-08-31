@@ -32,18 +32,26 @@ export const getAllClubs = async() : Promise<ClubResponse[]> => {
     return clubsData;
 }
 
-export const getClubById = async (id : number) : Promise<ClubResponse | undefined> => {
+export const getClubById = async (id : number) : Promise<ClubResponse> => {
     let clubsData: ClubResponse[] = await getAllClubs();
 
     const foundClub : ClubResponse | undefined = clubsData.find((club) => club.id === id);
 
+    if (!foundClub) {
+        throw new Error('Club not found');
+    }
+
     return foundClub;
 }
 
-export const getClubByName = async (name : string) : Promise<ClubResponse | undefined> => {
+export const getClubByName = async (name : string) : Promise<ClubResponse> => {
     let clubsData: ClubResponse[] = await getAllClubs();
     
     const foundClub : ClubResponse | undefined = clubsData.find((club) => club.name.includes(name));
+
+    if (!foundClub) {
+        throw new Error('Club not found');
+    }
 
     return foundClub;
 }
@@ -102,7 +110,6 @@ export const updateClub = async(club: ClubUpdate, id: number) : Promise<ClubResp
     await fixClubIds();
 
     const updatedClubs = await getAllClubs();
-    console.table(updatedClubs);
     return updatedClubs[updatedClubs.length-1];
 }
 

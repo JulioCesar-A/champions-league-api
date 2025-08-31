@@ -43,15 +43,19 @@ export const getAllPlayers = async() : Promise<PlayerResponse[]> => {
     return playersData;
 }
 
-export const getPlayerById = async(id: number) : Promise<PlayerResponse | undefined> => {
+export const getPlayerById = async(id: number) : Promise<PlayerResponse> => {
     let playersData: PlayerResponse[] = await getAllPlayers();
 
     const foundPlayer: PlayerResponse | undefined = playersData.find((player) => player.id === id);
 
+    if (!foundPlayer) {
+        throw new Error('Player not found');
+    }
+
     return foundPlayer;
 }
 
-export const getPlayerByName = async(name: string) : Promise<PlayerResponse | undefined> => {
+export const getPlayerByName = async(name: string) : Promise<PlayerResponse> => {
     let playersData: PlayerResponse[] = await getAllPlayers();
     
     const foundPlayer: PlayerResponse | undefined = playersData.find((player) => player.name.includes(name));
