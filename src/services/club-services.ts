@@ -35,3 +35,29 @@ export const deleteClubByIdService = async(id: number) : Promise<ClubTransferMod
 
     return clubResponse;
 }
+
+export const insertClubService = async(club: Club) : Promise<ClubTransferModel> => {
+    let clubResponse: ClubTransferModel = {
+        statusCode: 0,
+        body: []
+    }
+    let newClub: ClubResponse;
+
+    try {
+        newClub = await insertClub(club);
+    } catch (error) {
+        const errorMsg = error ? String(error) : '';
+        clubResponse = {
+            statusCode: StatusCode.InternalServerError,
+            body: errorMsg
+        }
+
+        return clubResponse;
+    }
+
+    clubResponse = {
+        statusCode: StatusCode.Created,
+        body: newClub
+    }
+    return clubResponse;
+}
