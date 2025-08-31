@@ -62,6 +62,49 @@ export const insertClubService = async(club: Club) : Promise<ClubTransferModel> 
     return clubResponse;
 }
 
+export const updatedClubService = async(
+    club: ClubUpdate,
+    id: number
+) : Promise<ClubTransferModel> => {
+    let clubResponse: ClubTransferModel = {
+        statusCode: 0,
+        body: []
+    }
+    let updatedClub: ClubResponse;
+
+    try {
+        updatedClub = await updateClub(club, id);
+    } catch (error) {
+        const errorMsg = error ? String(error) : '';
+        if (errorMsg.includes('not found')) {
+            clubResponse = {
+                statusCode: StatusCode.NotFound,
+                body: errorMsg
+            };
+        } else if (errorMsg.includes('Could not update')) {
+            clubResponse = {
+                statusCode: StatusCode.InternalServerError,
+                body: errorMsg
+            };
+        } else {
+            clubResponse = {
+                statusCode: StatusCode.InternalServerError,
+                body: errorMsg
+            };
+        }
+        console.table(clubResponse);
+        return clubResponse;
+    }
+
+    clubResponse = {
+        statusCode: StatusCode.OK,
+        body: updatedClub
+    };
+    
+    console.log(clubResponse);
+    return clubResponse;
+}
+
 export const getAllClubsService = async() : Promise<ClubTransferModel> => {
     let clubResponse: ClubTransferModel = {
         statusCode: 0,
