@@ -5,6 +5,21 @@ import { ClubResponse, Club, ClubUpdate } from '../models/club/club-models';
 
 const clubsFilePath = path.join(__dirname, '../../data/clubs.json');
 
+const fixClubIds = async (): Promise<void> => {
+    let clubsData: ClubResponse[] = await getAllClubs();
+    clubsData.sort((a, b) => a.id - b.id);
+    clubsData = clubsData.map((club, index) => ({
+        ...club,
+        id: index + 1
+    }));
+    try {
+        await fs.writeFile(clubsFilePath, JSON.stringify(clubsData, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Failed to fix club ids', error);
+        throw new Error('Could not fix club ids');
+    }
+}
+
 export const getAllClubs = async() : Promise<ClubResponse[]> => {
     let clubsData: ClubResponse[] = [];
     try {
@@ -56,7 +71,37 @@ export const insertClub = async(club: Club) : Promise<ClubResponse> =>{
         throw new Error('Could not save club to database');
 
     }
-    console.table(clubsData);
 
-    return clubsData[clubsData.length-1];
+    await fixClubIds();
+
+    const updatedClubs = await getAllClubs();
+    return updatedClubs[updatedClubs.length-1];
+}
+
+export const updateClub = async(club: ClubUpdate, id: number) : Promise<ClubResponse> => {
+    let clubsData: ClubResponse[] = await getAllClubs();
+
+    const clubIndex = clubsData.findIndex((c) => c.id === id);
+    if (clubIndex === -1) {
+        throw new Error('club not found');
+    }
+
+    const updatedClub = clubsData[clubIndex] = {
+        ...clubsData[clubIndex],
+        ...club,
+        id: id
+    }
+
+    try {
+        await fs.writeFile(clubsFilePath, JSON.stringify(clubsData, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Failed to write club data to file', error);
+        throw new Error('Could not update club to database');
+    }
+
+    await fixClubIds();
+
+    const updatedClubs = await getAllClubs();
+    console.table(updatedClubs);
+    return updatedClubs[updatedClubs.length-1];
 }
