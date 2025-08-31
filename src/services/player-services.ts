@@ -12,12 +12,11 @@ export const deletePlayerByIdService = async(id: number) : Promise<PlayerTransfe
     try {
         await deletePlayerById(id);
     } catch (error) {
-        const errorM = error? String(error) : []
+        const errorM = error? String(error) : ''
         playerResponse = {
             statusCode: StatusCode.NotFound,
-            body: error ? String(error) : []
+            body: errorM
         }
-        console.table(playerResponse);
     }
 
     playerResponse = {
@@ -25,7 +24,6 @@ export const deletePlayerByIdService = async(id: number) : Promise<PlayerTransfe
         body: []
     }
 
-    console.table(playerResponse);
     return playerResponse;
 }
 
@@ -48,7 +46,7 @@ export const insertPlayerService = async(player: Player, clubId?: number) : Prom
 
     playerResponse = {
         statusCode: StatusCode.Created,
-        body: [newPlayer]
+        body: newPlayer
     }
 
     return playerResponse;
