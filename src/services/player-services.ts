@@ -28,3 +28,29 @@ export const deletePlayerByIdService = async(id: number) : Promise<PlayerTransfe
     console.table(playerResponse);
     return playerResponse;
 }
+
+
+export const insertPlayerService = async(player: Player, clubId?: number) : Promise<PlayerTransferModel> => {
+    let playerResponse: PlayerTransferModel = {
+        statusCode: 0,
+        body: []
+    }
+    let newPlayer: PlayerResponse;
+
+    try {
+        newPlayer = await insertPlayer(player, clubId);
+    } catch (error) {
+        playerResponse = {
+            statusCode: StatusCode.InternalServerError,
+            body: error ? String(error) : []
+        }
+        return playerResponse;
+    }
+
+    playerResponse = {
+        statusCode: StatusCode.Created,
+        body: [newPlayer]
+    }
+
+    return playerResponse;
+}
