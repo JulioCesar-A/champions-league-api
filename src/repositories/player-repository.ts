@@ -112,3 +112,22 @@ export const updatePlayer = async(
 
     return updatedPlayer;
 }
+
+export const deletePlayerById = async(id: number) : Promise<void> => {
+    let playersData: PlayerResponse[] = await getAllPlayers();
+
+    const playerIndex = playersData.findIndex((p) => p.id === id);
+    if (playerIndex === -1) {
+        throw new Error('Player not found');
+    }
+
+    playersData.splice(playerIndex, 1);
+
+    try {
+        await fs.writeFile(playersFilePath, JSON.stringify(playersData, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Failed to write player data to file', error);
+        throw new Error('Could not delete player from database');
+    }
+
+}
