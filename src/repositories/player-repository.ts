@@ -19,3 +19,11 @@ export const getAllPlayers = async() : Promise<PlayerResponse[]> => {
     return playersData;
 }
 
+export const getPlayerById = async(id: number) : Promise<PlayerResponse | undefined> => {
+    let playersData: PlayerResponse[] = await getAllPlayers();
+
+    const foundPlayer: PlayerResponse | undefined = playersData.find((player) => player.id === id);
+
+    console.dir(foundPlayer, {depth:null});        
+    return foundPlayer;
+}
