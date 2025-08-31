@@ -1,8 +1,8 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import { Player, PlayerResponse, Statistics } from '../models/player/player-models';
 
-const playersFilePath = path.join(__dirname, '../../data/players.json');
+const playersFilePath: string = path.join(__dirname, '../../data/players.json');
 
 const estimateOverallStat = async(stats : Statistics) : Promise<number> => {
     let statsSum: number = 0;
@@ -19,9 +19,11 @@ export const getAllPlayers = async() : Promise<PlayerResponse[]> => {
     let playersData : PlayerResponse[] = [];
 
     try {
-        if (fs.existsSync(playersFilePath)) {
-            const fileContent = fs.readFileSync(playersFilePath, 'utf-8');
+        try {
+            const fileContent = await fs.readFile(playersFilePath, 'utf-8');
             playersData = JSON.parse(fileContent);
+        } catch (err) {
+            // File might not exist, ignore error
         }
     } catch (error) {
         console.error('Error reading clubs data:', error);
@@ -46,13 +48,32 @@ export const getPlayerByName = async(name: string) : Promise<PlayerResponse | un
     return foundPlayer;
 }
 
-// export const insertPlayer = async(player : Player, clubId?: number) : Promise<void> => {
-//     let playersData: PlayerResponse[] = await getAllPlayers();
+export const insertPlayer = async(player : Player, clubId?: number) : Promise<PlayerResponse> => {
+    let playersData: PlayerResponse[] = await getAllPlayers();
 
-//     const newPlayer: Player = player;
-//     newPlayer.statistics.overall = await estimateOverallStat(player.statistics);
+    const existingIndex = playersData.findIndex((p) => p.name === player.name);
+    if (existingIndex !== -1) {
+        throw new Error('Player already exists');
+    }
+    
+    const newPlayer: PlayerResponse ={
+        ...player,
+        id: playersData.length + 1,
+        clubId: clubId ?? player.clubId ?? undefined
+    }
+    
+    if(!newPlayer.statistics.overall) {
+        newPlayer.statistics.overall = await estimateOverallStat(player.statistics);
+    }
 
-//     console.log(newPlayer);
-// }
+    playersData.push(newPlayer);
 
-// insertPlayer({name: "d", nationality: "d", position: "Forward", statistics: {defending:1,dribbling:1,pace:1,passing:1,physical:1,shooting:3}});
+    try {
+        await fs.writeFile(playersFilePath, JSON.stringify(playersData, null, 2), 'utf8');
+    } catch (error) {
+        console.error('Failed to write player data to file', error);
+        throw new Error('Could not save player to database');
+    }
+
+    return playersData[playersData.length-1];
+}
