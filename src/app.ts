@@ -28,15 +28,6 @@ function createApp() {
     res.status(StatusCode.OK).json({ message: 'Hello world' });
   });
 
-  // === TRATAMENTO DE ROTAS NÃO ENCONTRADAS ===
-  app.use((req: Request, res: Response) => {
-    res.status(StatusCode.NotFound).json({
-      error: 'Route not found',
-      method: req.method,
-      path: req.path
-    });
-  });
-
   return app;
 }
 
