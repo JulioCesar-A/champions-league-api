@@ -1,16 +1,13 @@
-import express, { Request, Response } from 'express';
-import { Routes } from './routes/routes';
-import { StatusCode } from './utils/status-code';
+import clubRouter from './routes/club-routes';
+import playerRouter from './routes/player-routes';
+import createApp from './app';
 
-function createApp(){
-    const app = express();
-    
-    app.use(express.json());
-    app.get(Routes.Root, (req: Request, res: Response) => {
-        res.status(StatusCode.OK).json({ "message" : "Hello world" });
-    });
+const app = createApp();
+const port = process.env.PORT;
 
-    return app;
-}
+app.use('/players', playerRouter);
+app.use('/clubs', clubRouter);
 
-export default createApp;
+app.listen(port, () => {
+    console.log(`Server listening at http://localhost:${port}`);
+}); 
