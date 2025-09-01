@@ -1,5 +1,5 @@
-import { Request, Response } from 'express'
-import { getAllPlayersService, getPlayerByIdService, getPlayerByNameService, insertPlayerService, deletePlayerByIdService, updatedPlayerService } from '../services/player-services'
+import { Request, Response } from 'express';
+import { getAllPlayersService, getPlayerByIdService, getPlayerByNameService, insertPlayerService, deletePlayerByIdService, updatedPlayerService } from '../services/player-services';
 
 export const getPlayers = async(req: Request, res: Response) => {
     const content = await getAllPlayersService();
