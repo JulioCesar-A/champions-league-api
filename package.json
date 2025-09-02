@@ -9,10 +9,16 @@
     "dist": "tsup src",
     "exec:dist": "npm run dist && node --env-file-if-exists=.env dist/server.js"
   },
-  "keywords": ["express", "api", "champions", "league"],
+  "keywords": [
+    "express",
+    "api",
+    "champions",
+    "league"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
     "tsup": "^8.5.0",
     "tsx": "^4.20.5",
