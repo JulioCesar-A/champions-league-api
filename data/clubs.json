@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "name": "Manchester United",
+    "location": "Manchester, England",
+    "id": 1
+  },
+  {
+    "name": "FC Barcelona",
+    "location": "Barcelona, Spain",
+    "id": 2
+  },
+  {
+    "name": "Chelsea",
+    "location": "London, England",
+    "id": 3
+  },
+  {
+    "name": "Paris Saint-Germain",
+    "location": "Paris, France",
+    "id": 4
+  }
+]

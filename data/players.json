@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "name": "Virgil van Dijk",
+    "nationality": "Dutch",
+    "position": "Defender",
+    "statistics": {
+      "overall": 90,
+      "pace": 75,
+      "shooting": 70,
+      "passing": 80,
+      "dribbling": 70,
+      "defending": 90,
+      "physical": 85
+    },
+    "id": 1
+  },
+  {
+    "name": "Kevin De Bruyne",
+    "nationality": "Belgian",
+    "position": "Midfielder",
+    "statistics": {
+      "overall": 91,
+      "pace": 78,
+      "shooting": 88,
+      "passing": 95,
+      "dribbling": 90,
+      "defending": 60,
+      "physical": 75
+    },
+    "id": 2
+  },
+  {
+    "name": "Kylian Mbappé",
+    "nationality": "French",
+    "position": "Forward",
+    "statistics": {
+      "overall": 92,
+      "pace": 97,
+      "shooting": 89,
+      "passing": 86,
+      "dribbling": 94,
+      "defending": 35,
+      "physical": 78
+    },
+    "id": 3
+  },
+  {
+    "name": "Lionel Messi",
+    "nationality": "Argentinian",
+    "position": "Forward",
+    "statistics": {
+      "overall": 93,
+      "pace": 85,
+      "shooting": 92,
+      "passing": 91,
+      "dribbling": 95,
+      "defending": 38,
+      "physical": 65
+    },
+    "id": 4
+  }
+]
