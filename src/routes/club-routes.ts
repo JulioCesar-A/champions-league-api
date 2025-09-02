@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get(Routes.Root, getClubs);
 router.get(Routes.Id, getClubById);
-router.get(Routes.Name, getClubByName);
+router.get(Routes.Search, getClubByName);
 router.post(Routes.Root, insertClub);
 router.delete(Routes.Id, deleteClub);
 
