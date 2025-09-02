@@ -7,15 +7,38 @@ export const getClubs = async (req: Request, res: Response) => {
 }
 
 export const getClubById = async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id);
-    const content = await getClubByIdService(id);
-    res.status(content.statusCode).json(content.body);
+    let content;
+    try {
+        const id = parseInt(req.params.id);
+        content = await getClubByIdService(id);
+        res.status(content.statusCode).json(content.body);
+    } catch (error) {
+        res.status(content?.statusCode ?? 500).json(content?.body ?? { error: 'Internal server error' });
+    }
 }
 
 export const getClubByName = async (req: Request, res: Response) => {
-    const name = req.params.name;
-    const content = await getClubByNameService(name);
-    res.status(content.statusCode).json(content.body);
+    let content;
+
+    try {
+        const { name } = req.query;
+
+        if (!name || typeof name !== 'string') {
+            return res.status(400).json({ error: 'Name query parameter is required' });
+        }
+
+        const trimmedName = name.trim();
+
+        if (trimmedName.length === 0) {
+            return res.status(400).json({ error: 'Name query parameter must not be empty' });
+        }
+
+        content = await getClubByNameService(trimmedName);
+        res.status(content.statusCode).json(content.body);
+    } catch (error) {
+        res.status(content?.statusCode ?? 500).json(content?.body ?? { error: 'Internal server error' });
+    }
+
 }
 
 export const insertClub = async (req: Request, res: Response) => {
