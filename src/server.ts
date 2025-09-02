@@ -20,5 +20,5 @@ app.use((req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+    console.log(`Server listening at localhost:${port}`);
 }); 
